@@ -61,29 +61,27 @@ function pname(str) {
     return words.join(' ');
 }
 
-fileInputButton.onchange = function() {
-    var blocked = false;
-    for (var i = 0; i < this.files.length; i++) {
-        var file = this.files[i];
-        if (file.type !== 'application/json') {
-            blocked = true;
-            continue;
-        }
-        var textElement = document.createElement('div');
-        var element = document.createElement('li');
-        textElement.textContent = file.name;
-        textElement.alt = file.name;
-        element.appendChild(textElement);
-        element.className = 'generated';
-        fileInputList.appendChild(element);
+fileInputButton.onclick = function() {
+    fs.readdir(localStorage.desktopPath, (err, result) => {
+        if (err) throw err;
+        for (file of result) {
+            if (file.endsWith('.json') && !fileBuffer.includes(file)) {
+                var textElement = document.createElement('div');
+                var element = document.createElement('li');
+                textElement.textContent = file;
+                textElement.alt = file;
+                element.appendChild(textElement);
+                element.className = 'generated';
+                fileInputList.appendChild(element);
 
-        fileBuffer.push(file);
-    }
-    if (blocked) alert('Some files have been blocked due to improper type. (Only accepting .json files)');
+                fileBuffer.push(file);
+            }
+        }
+    });
 }
 
-outputButton.onclick = async function() {
-    var content = await makeCSV();
+outputButton.onclick = function() {
+    var content = makeCSV();
     var fd;
     try {
         fd = fs.openSync(localStorage.desktopPath + '/' + (outputFileName.value ? outputFileName.value : 'data') + '.csv', 'a');
@@ -102,17 +100,16 @@ outputButton.onclick = async function() {
 document.onclick = function(e) {
     if (Array.from(fileInputList.children).includes(e.target.parentElement)) {
         for (var i = 0; i < fileBuffer.length; i++) {
-            if (fileBuffer[i].name === e.target.textContent) {
+            if (fileBuffer[i] === e.target.textContent) {
                 fileBuffer.splice(i--, 1);
             }
         }
         fileInputList.removeChild(e.target.parentElement);
-        fileInputButton.value = '';
     }
 }
 
-async function makeCSV() {
-    var data = await combineFiles();
+function makeCSV() {
+    var data = combineFiles();
 
     const items = data;
     const replacer = (key, value) => value === null ? '' : value;
@@ -125,34 +122,17 @@ async function makeCSV() {
 }
 
 function combineFiles() {
-    var promises = [];
+    var data = [];
     for (file of fileBuffer) {
-        promises.push(new Promise((resolve, reject) => {
-            var reader = new FileReader();
-            // Save the file name in each file reader for access later.
-            reader.file = file.name;
-            reader.onload = () => {
-                var data = [];
-                try {
-                    data = JSON.parse(reader.result);
-                } catch (err) {
-                    alert('File ' + reader.file + ' has parsing errors. Resolve and run again.');
-                }
-                resolve(data);
+        var contents = fs.readFileSync(localStorage.desktopPath + '/' + file);
+        try {
+            for (object of JSON.parse(contents)) {
+                data.push(object);
             }
-            reader.onerror = () => resolve([]);
-            reader.readAsText(file);
-        }));
+        } catch (err) {
+            alert('File ' + file + ' has parsing errors. Resolve and run again.');
+            continue;
+        }
     }
-    return Promise.all(promises).then((resolvedData) => {
-        return new Promise((resolve, reject) => {
-            var data = [];
-            for (file of resolvedData) {
-                for (object of file) {
-                    data.push(object);
-                }
-            }
-            resolve(data);
-        });
-    });
+    return data;
 }
