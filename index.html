@@ -28,41 +28,7 @@
         <button id="view">View Data</button>
     </div>
     <div class="row">
-        <h1>PRE-TELEOP</h1>
-        <div>
-            <h2>Moved from initiation line</h2>
-            <input type="checkbox" id="init-line-movement">
-        </div>
-        <div>
-            <h2>Balls started with</h2>
-            <input type="number" id="starting-balls" value="0" min="0" max="3">
-        </div>
-        <div>
-            <h2>Balls picked up (auto)</h2>
-            <input type="number" id="auto-balls" value="0" min="0">
-        </div>
-    </div>
-    <div class="row">
-        <h1>CONTROL PANEL</h1>
-        <div>
-            <h2>Rotation Control</h2>
-                <input type="checkbox" id="rotation-control">
-        </div>
-        <div>
-            <h2>Position Control</h2>
-            <input type="checkbox" id="position-control">
-        </div>
-    </div>
-    <div class="row">
         <h1>POWER PORT</h1>
-        <div>
-            <h2>Autonomous</h2>
-            <input type="number" class="balls" id="auto-inner-port" value="0" min="0">
-            <br>
-            <input type="number" class="balls" id="auto-outer-port" value="0" min="0">
-            <br>
-            <input type="number" class="balls" id="auto-bottom-port" value="0" min="0">
-        </div>
         <div>
             <p>&#8592 Inner &#8594</p>
             <br>
@@ -72,45 +38,28 @@
         </div>
         <div>
             <h2>Teleoperated</h2>
-            <input type="number" class="balls" id="teleop-bottom-port" value="0" min="0">
+            <input type="number" class="balls" id="teleop-inner-port" value="0" min="0">
             <br>
             <input type="number" class="balls" id="teleop-outer-port" value="0" min="0">
             <br>
-            <input type="number" class="balls" id="teleop-inner-port" value="0" min="0">
+            <input type="number" class="balls" id="teleop-bottom-port" value="0" min="0">
         </div>
     </div>
     <div class="row">
-        <h1>GENERATOR SWITCH</h1>
+        <h1>CHALLENGES</h1>
         <div>
-            <h2>Level Reached</h2>
-            <select id="level-end">
-                <option>None</option>
-                <option>Parked</option>
-                <option>Hanging</option>
-                <option>Level</option>
-            </select>
+            <h2>Driving Challenges</h2>
+            <label for="driving-markers-hit">Markers hit:</label>
+            <input type="number" class="markers" id="driving-markers-hit" value="0" min="0">
+            <label for="driving-time">Time:</label>
+            <input type="number" class="time" id="driving-time" value="0" min="0">
+            <h2>Autonomous Challenges</h2>
+            <label for="autonomous-markers-hit">Markers hit:</label>
+            <input type="number" class="markers" id="autonomous-markers-hit" value="0" min="0">
+            <label for="autonomous-time">Time:</label>
+            <input type="number" class="time" id="autonomous-time" value="0" min="0">
         </div>
-        <div>
-            <h2>Climb Assists</h2>
-            <input type="number" id="climb-assist" value="0" min="0" max="2">
-        </div>
-        <div>
-            <h2>Adjustable climb</h2>
-            <input type="checkbox" id="adjustable-climb">
-        </div>
-    </div>
-    <div class="row">
-        <h1>DEFENSE</h1>
-        <div>
-            <h2>Was defended against</h2>
-            <input type="checkbox" id="defended-against">
-        </div>
-        <div>
-            <h2>Played defense</h2>
-            <input type="checkbox" id="played-defense">
-        </div>
-    </div>
-    <div class="row">
+        
         <textarea id="notes" placeholder=
 "Write notes here!
 
@@ -121,7 +70,7 @@ Please refrain from making sweeping declarations about whether a team should be 
 "></textarea>
     </div>
 
-    <script src="js/script.js"></script>
+    <script>require('./js/script.js');</script>
 </body>
 
 </html>
